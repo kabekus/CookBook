@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,42 +8,56 @@
 
     <EditText
         android:id="@+id/cookNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="315dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="18dp"
         android:ems="10"
         android:hint="Yemek Adı Girin"
         android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/cookMaterialsText"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
-        tools:layout_editor_absoluteY="334dp" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="346dp"
-        android:layout_height="203dp"
+        android:layout_width="297dp"
+        android:layout_height="175dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="31dp"
+        android:layout_marginBottom="62dp"
+        android:onClick="selectPictures"
         android:src="@drawable/picture"
-        tools:layout_editor_absoluteX="34dp"
-        tools:layout_editor_absoluteY="68dp" />
+        app:layout_constraintBottom_toTopOf="@+id/cookNameText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/cookMaterialsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="315dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="55dp"
         android:ems="10"
         android:hint="Malzemeleri Girin"
         android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintEnd_toEndOf="@+id/cookNameText"
         app:layout_constraintStart_toStartOf="@+id/cookNameText"
-        tools:layout_editor_absoluteY="401dp" />
+        app:layout_constraintTop_toBottomOf="@+id/cookNameText" />
 
     <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
+        android:layout_marginBottom="20dp"
         android:backgroundTint="#FFFFFF"
         android:text="Kaydet"
         android:textColor="#000000"
-        app:layout_constraintTop_toBottomOf="@+id/cookMaterialsText"
-        tools:layout_editor_absoluteX="158dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cookMaterialsText" />
 </androidx.constraintlayout.widget.ConstraintLayout>
