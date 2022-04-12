@@ -48,8 +48,16 @@ class SpecificationFragment : Fragment() {
     }
 
     fun saveButton(view: View){
+        val cookName = cookNameText.text.toString()
+        val cookMaterialsText = cookMaterialsText.text.toString()
+
+        if (selectBitmap != null){
+            val smallBitmapCreated = smallBitmap(selectBitmap!!,300)
+            
+        }
+
         activity?.let {
-            Toast.makeText(it.applicationContext,"Tıklandı",Toast.LENGTH_LONG).show() //Toast Message
+            Toast.makeText(it.applicationContext,"Kaydedildi",Toast.LENGTH_LONG).show() //Toast Message
         }
 
 
@@ -104,4 +112,23 @@ class SpecificationFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    fun smallBitmap(userSelectBitmap : Bitmap , maxDimension : Int) : Bitmap{
+        var width = userSelectBitmap.width
+        var height = userSelectBitmap.height
+
+        val bitmapRatio : Double = width.toDouble() / height.toDouble()
+
+        if (bitmapRatio > 1){
+            //Görsel Yataysa
+            width = maxDimension
+            val shortenedHeight = width / bitmapRatio
+            height = shortenedHeight.toInt()
+        }else{
+            //Görsel Dikeyse
+            height = maxDimension
+            val shortenedWidth = height * bitmapRatio
+            width = shortenedWidth.toInt()
+        }
+        return Bitmap.createScaledBitmap(userSelectBitmap,width,height,true)
+    }
 }
