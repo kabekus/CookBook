@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.foodAddItem){
-            val action = ListFragmentDirections.actionListFragmentToSpecificationFragment()
+            val action = ListFragmentDirections.actionListFragmentToSpecificationFragment("menudengeldim",0)
             Navigation.findNavController(this,R.id.fragmentContainerView).navigate(action)
         }
 

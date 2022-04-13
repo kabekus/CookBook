@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -17,7 +18,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.navigation.Navigation
 import kotlinx.android.synthetic.main.fragment_specification.*
+import java.io.ByteArrayOutputStream
 
 class SpecificationFragment : Fragment() {
     var selectpic : Uri? = null
@@ -45,6 +48,45 @@ class SpecificationFragment : Fragment() {
         imageView.setOnClickListener {
             selectPictures(it)
         }
+
+        arguments?.let{
+            var inComingInformation = SpecificationFragmentArgs.fromBundle(it).information
+            if (inComingInformation.equals("menudengeldim")){
+                cookNameText.setText("")
+                cookMaterialsText.setText("")
+                saveButton.visibility = View.VISIBLE
+
+                val selectPicBackGround = BitmapFactory.decodeResource(context?.resources,R.drawable.picture)
+                imageView.setImageBitmap(selectPicBackGround)
+            }else{
+                saveButton.visibility = View.INVISIBLE
+
+                val selectId = SpecificationFragmentArgs.fromBundle(it).id
+
+                context?.let{
+                    try {
+                        val db = it.openOrCreateDatabase("Foods",Context.MODE_PRIVATE,null)
+                        val cursor = db.rawQuery("SELECT * FROM cooks WHERE id = ?", arrayOf(selectId.toString()))
+
+                        val cookNameIndex = cursor.getColumnIndex("cookName")
+                        val cookMaterialsIndex = cursor.getColumnIndex("cookMaterialsText")
+                        val cookPicture = cursor.getColumnIndex("pictures")
+
+                        while (cursor.moveToNext()){
+                            cookNameText.setText(cursor.getString(cookNameIndex))
+                            cookMaterialsText.setText(cursor.getString(cookMaterialsIndex))
+                            val byteArray = cursor.getBlob(cookPicture)
+                            val bitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.size)
+                            imageView.setImageBitmap(bitmap)
+                        }
+                        cursor.close()
+                    }catch (e : Exception){
+                        e.printStackTrace()
+                    }
+                }
+
+            }
+        }
     }
 
     fun saveButton(view: View){
@@ -53,7 +95,29 @@ class SpecificationFragment : Fragment() {
 
         if (selectBitmap != null){
             val smallBitmapCreated = smallBitmap(selectBitmap!!,300)
-            
+
+            val outputStream = ByteArrayOutputStream()
+            smallBitmapCreated.compress(Bitmap.CompressFormat.PNG,50,outputStream)
+            val byteArray = outputStream.toByteArray()
+
+            try{
+                    context?.let{
+                        val database = it.openOrCreateDatabase("Foods",Context.MODE_PRIVATE,null)
+                        database.execSQL("CREATE TABLE IF NOT EXISTS cooks(id INTEGER PRIMARY KEY, cookName VARCHAR,cookMaterialsText VARCHAR, pictures BLOB)")
+                        val sqlString = "INSERT INTO cooks(cookName,cookMaterialsText,pictures) VALUES (?,?,?)"
+                        val statement = database.compileStatement(sqlString)
+                        statement.bindString(1,cookName)
+                        statement.bindString(2,cookMaterialsText)
+                        statement.bindBlob(3,byteArray)
+                        statement.execute()
+                    }
+
+
+            }catch (e: Exception){
+
+            }
+            val action = SpecificationFragmentDirections.actionSpecificationFragmentToListFragment()
+            Navigation.findNavController(view).navigate(action)
         }
 
         activity?.let {
@@ -89,7 +153,7 @@ class SpecificationFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-       if (requestCode == 2 && requestCode == Activity.RESULT_OK && data != null){
+       if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null){
            selectpic = data.data
            try {
                context?.let {

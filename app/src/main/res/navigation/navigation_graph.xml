@@ -22,5 +22,13 @@
         <action
             android:id="@+id/action_specificationFragment_to_listFragment"
             app:destination="@id/listFragment" />
+        <argument
+            android:name="information"
+            app:argType="string"
+            android:defaultValue="menudengeldim" />
+        <argument
+            android:name="id"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 </navigation>
